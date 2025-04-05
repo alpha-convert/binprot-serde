@@ -1,0 +1,1 @@
+This has been done before, see [here](https://github.com/LaurentMazare/serde-binprot) and [here](https://github.com/ChainSafe/serde-bin-prot). This is just a project for Joe to learn Rust.
