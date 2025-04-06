@@ -132,11 +132,17 @@ impl<W : Write> serde::Serializer for &mut BPSerializer<W> {
     }
 
     fn serialize_char(self, v: char) -> Result<Self::Ok, Self::Error> {
-        todo!()
+        match v.as_ascii() {
+            None => Err(BPErr::NonAsciiChar),
+            Some(c) => {
+                Ok(self.writer.write_all(&[c.to_u8()])?)
+            }
+        }
     }
 
     fn serialize_str(self, v: &str) -> Result<Self::Ok, Self::Error> {
-        let len = v.len();
+        let bytes = v.as_bytes();
+        let len = bytes.len();
         self.serialize_nat0(len as u64)?;
         Ok(self.writer.write_all(v.as_bytes())?)
     }

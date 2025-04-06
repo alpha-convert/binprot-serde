@@ -1,16 +1,37 @@
-use std::{fmt::Display, io::Read};
+use std::{fmt::Display, io::Read, num::TryFromIntError};
 use serde::{de::value::Error, ser::Impossible};
 #[derive(Debug)]
 pub enum BPErr {
     NotImplementable,
     NotSpecified,
+
+    NonAsciiChar,
+
     IoErr(std::io::Error),
-    Custom(String)
+    Custom(String),
+
+    NotBool,
+    NotOption,
+    NotUnit,
+    Utf8Err(std::str::Utf8Error),
+    IntCastErr(TryFromIntError)
 }
 
 impl From<std::io::Error> for BPErr {
     fn from(value: std::io::Error) -> Self {
         Self::IoErr(value)
+    }
+}
+
+impl From<std::str::Utf8Error> for BPErr {
+    fn from(value: std::str::Utf8Error) -> Self {
+        Self::Utf8Err(value)
+    }
+}
+
+impl From<TryFromIntError> for BPErr {
+    fn from(value: TryFromIntError) -> Self {
+        Self::IntCastErr(value)
     }
 }
 
